@@ -5,6 +5,7 @@ import { Bars } from 'react-loader-spinner';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../Button/Button';
 import getImages from 'services/api';
+import css from './ImageGallery.module.css';
 
 const Status = {
   IDLE: 'idle',
@@ -134,7 +135,7 @@ class ImageGallery extends Component {
     if (status === 'resolved') {
       return (
         <section className={status}>
-          <ul>
+          <ul className={css.ImageGallery}>
             <ImageGalleryItem list={images} />
           </ul>
           <Button

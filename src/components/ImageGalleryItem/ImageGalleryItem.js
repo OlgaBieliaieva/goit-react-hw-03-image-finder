@@ -1,4 +1,5 @@
 import shortid from 'shortid';
+import css from './ImageGalleryItem.module.css';
 
 function ImageGalleryItem({ list }) {
   console.log(list.length);
@@ -7,8 +8,12 @@ function ImageGalleryItem({ list }) {
       {list.map(({ webformatURL, largeImageURL, tags }) => {
         const id = shortid.generate();
         return (
-          <li key={id}>
-            <img src={webformatURL} alt={tags}></img>
+          <li className={css.ImageGalleryItem} key={id}>
+            <img
+              className={css.ImageGalleryItemImage}
+              src={webformatURL}
+              alt={tags}
+            ></img>
           </li>
         );
       })}

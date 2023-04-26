@@ -11,7 +11,7 @@ const REQUEST_OPTIONS = {
 };
 
 async function getImages(query, page) {
-  REQUEST_OPTIONS.q = query;
+  REQUEST_OPTIONS.q = query.toLowerCase().trim();
   REQUEST_OPTIONS.page = page;
 
   console.log(REQUEST_OPTIONS);

@@ -1,10 +1,13 @@
 import { Component } from 'react';
 import { FcBinoculars } from 'react-icons/fc';
-import { Bars } from 'react-loader-spinner';
-// import PropTypes from 'prop-types';
+import { IconContext } from 'react-icons';
+
+import PropTypes from 'prop-types';
+import Loader from '../Loader/Loader';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../Button/Button';
 import getImages from 'services/api';
+import Modal from '../Modal/Modal';
 import css from './ImageGallery.module.css';
 
 const Status = {
@@ -15,13 +18,19 @@ const Status = {
 };
 
 class ImageGallery extends Component {
+  static propTypes = {
+    query: PropTypes.string.isRequired,
+  };
+
   state = {
     images: [],
+    modalImg: '',
     page: 1,
     total: null,
     error: null,
     status: Status.IDLE,
     disabled: false,
+    showModal: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -41,8 +50,11 @@ class ImageGallery extends Component {
 
       getImages(nextQuery, 1)
         .then(images => {
-          console.log(images);
-
+          if (images.data.totalHits === 0) {
+            return this.setState({
+              status: Status.REJECTED,
+            });
+          }
           if (images.data.hits.length === images.data.totalHits) {
             return this.setState({
               images: [...images.data.hits],
@@ -66,7 +78,6 @@ class ImageGallery extends Component {
 
       getImages(nextQuery, nextPage)
         .then(images => {
-          console.log(images);
           if (
             this.state.images.length + images.data.hits.length ===
             images.data.totalHits
@@ -77,6 +88,7 @@ class ImageGallery extends Component {
               disabled: true,
             }));
           }
+
           return this.setState(prevState => ({
             images: [...prevState.images, ...images.data.hits],
             status: Status.RESOLVED,
@@ -92,15 +104,30 @@ class ImageGallery extends Component {
     });
   };
 
+  toggleModal = e => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+
+    if (e && e.target.srcset) {
+      this.setState({
+        modalImg: e.target.srcset,
+      });
+    }
+  };
+
   render() {
-    const { images, error, status } = this.state;
+    const { images, modalImg, page, total, status, disabled, showModal } =
+      this.state;
 
     if (status === 'idle') {
       return (
-        <section className={status}>
+        <section className={css.Idle}>
           <div>
             <h3>Start your search right now...</h3>
-            <FcBinoculars />
+            <IconContext.Provider value={{ size: '10em' }}>
+              <FcBinoculars />
+            </IconContext.Provider>
           </div>
         </section>
       );
@@ -108,18 +135,8 @@ class ImageGallery extends Component {
 
     if (status === 'pending') {
       return (
-        <section className={status}>
-          <div>
-            <Bars
-              height="80"
-              width="80"
-              color="#4fa94d"
-              ariaLabel="bars-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
-          </div>
+        <section className={css.Pending}>
+          <Loader />
         </section>
       );
     }
@@ -127,7 +144,7 @@ class ImageGallery extends Component {
     if (status === 'rejected') {
       return (
         <section className={status}>
-          <p>{error.message}</p>
+          <p>Sorry, we didn't find the information you requested...</p>
         </section>
       );
     }
@@ -136,18 +153,22 @@ class ImageGallery extends Component {
       return (
         <section className={status}>
           <ul className={css.ImageGallery}>
-            <ImageGalleryItem list={images} />
+            <ImageGalleryItem list={images} showModal={this.toggleModal} />
           </ul>
           <Button
-            page={this.state.page}
-            total={this.state.total}
+            page={page}
+            total={total}
             onChangePage={this.handleChangePage}
-            isActive={this.state.disabled}
+            isActive={disabled}
           />
+          {showModal && (
+            <Modal onClose={this.toggleModal}>
+              <img src={modalImg} onClick={this.toggleModal} alt="large"></img>
+            </Modal>
+          )}
         </section>
       );
     }
   }
 }
-
 export default ImageGallery;

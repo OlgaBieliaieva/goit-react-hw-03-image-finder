@@ -1,7 +1,7 @@
 import shortid from 'shortid';
 import css from './ImageGalleryItem.module.css';
 
-function ImageGalleryItem({ list }) {
+function ImageGalleryItem({ list, showModal }) {
   console.log(list.length);
   return (
     <>
@@ -13,6 +13,8 @@ function ImageGalleryItem({ list }) {
               className={css.ImageGalleryItemImage}
               src={webformatURL}
               alt={tags}
+              srcSet={largeImageURL}
+              onClick={showModal}
             ></img>
           </li>
         );

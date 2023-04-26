@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { ImSearch } from 'react-icons/im';
+import { IconContext } from 'react-icons';
 import css from './Searchbar.module.css';
 
 class Searchbar extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
+
   state = {
     value: '',
   };
@@ -30,7 +35,9 @@ class Searchbar extends Component {
       <section className={css.Searchbar}>
         <form className={css.SearchForm} onSubmit={this.handleSubmit}>
           <button className={css.SearchFormButton} type="submit">
-            <ImSearch className={css.SearchFormIcon} />
+            <IconContext.Provider value={{ size: '2em' }}>
+              <ImSearch />
+            </IconContext.Provider>
           </button>
           <input
             className={css.SearchFormInput}

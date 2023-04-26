@@ -1,8 +1,8 @@
 import shortid from 'shortid';
+import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
 
 function ImageGalleryItem({ list, showModal }) {
-  console.log(list.length);
   return (
     <>
       {list.map(({ webformatURL, largeImageURL, tags }) => {
@@ -24,3 +24,8 @@ function ImageGalleryItem({ list, showModal }) {
 }
 
 export default ImageGalleryItem;
+
+ImageGalleryItem.propTypes = {
+  list: PropTypes.array.isRequired,
+  showModal: PropTypes.func,
+};

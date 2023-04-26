@@ -14,8 +14,6 @@ async function getImages(query, page) {
   REQUEST_OPTIONS.q = query.toLowerCase().trim();
   REQUEST_OPTIONS.page = page;
 
-  console.log(REQUEST_OPTIONS);
-
   const options = new URLSearchParams(REQUEST_OPTIONS);
 
   try {

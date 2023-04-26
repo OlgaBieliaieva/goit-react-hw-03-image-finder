@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { FcBinoculars } from 'react-icons/fc';
 import { IconContext } from 'react-icons';
-
 import PropTypes from 'prop-types';
 import Loader from '../Loader/Loader';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
@@ -26,8 +25,7 @@ class ImageGallery extends Component {
     images: [],
     modalImg: '',
     page: 1,
-    total: null,
-    error: null,
+
     status: Status.IDLE,
     disabled: false,
     showModal: false,
@@ -43,7 +41,7 @@ class ImageGallery extends Component {
       this.setState({
         images: [],
         page: 1,
-        total: null,
+
         status: Status.PENDING,
         disabled: false,
       });
@@ -58,14 +56,14 @@ class ImageGallery extends Component {
           if (images.data.hits.length === images.data.totalHits) {
             return this.setState({
               images: [...images.data.hits],
-              total: images.data.totalHits,
+
               status: Status.RESOLVED,
               disabled: true,
             });
           }
           return this.setState({
             images: [...images.data.hits],
-            total: images.data.totalHits,
+
             status: Status.RESOLVED,
           });
         })
@@ -117,8 +115,7 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { images, modalImg, page, total, status, disabled, showModal } =
-      this.state;
+    const { images, modalImg, page, status, disabled, showModal } = this.state;
 
     if (status === 'idle') {
       return (
@@ -143,7 +140,7 @@ class ImageGallery extends Component {
 
     if (status === 'rejected') {
       return (
-        <section className={status}>
+        <section className={css.Rejected}>
           <p>Sorry, we didn't find the information you requested...</p>
         </section>
       );
@@ -157,7 +154,6 @@ class ImageGallery extends Component {
           </ul>
           <Button
             page={page}
-            total={total}
             onChangePage={this.handleChangePage}
             isActive={disabled}
           />

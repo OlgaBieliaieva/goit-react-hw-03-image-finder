@@ -26,6 +26,12 @@ function ImageGalleryItem({ list, showModal }) {
 export default ImageGalleryItem;
 
 ImageGalleryItem.propTypes = {
-  list: PropTypes.array.isRequired,
-  showModal: PropTypes.func,
+  list: PropTypes.arrayOf(
+    PropTypes.shape({
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+    })
+  ),
+  showModal: PropTypes.func.isRequired,
 };
